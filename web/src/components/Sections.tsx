@@ -1,24 +1,49 @@
-export function Sections() {
-  return (
-    <div>
-      <section id="about">
-        <h2>About Me</h2>
-        <p>
-          I enjoy building clean, maintainable systems and learning new
-          technologies.
-        </p>
-      </section>
+type Section =
+  | {
+      id: string;
+      type: "text";
+      title: string;
+      content: string;
+    }
+  | {
+      id: string;
+      type: "list";
+      title: string;
+      items: string[];
+    };
+type SectionsProps = {
+  sections: Section[];
+};
 
-      <section id="skills">
-        <h2>Skills</h2>
-        <ul>
-          <li>TypeScript</li>
-          <li>React</li>
-          <li>Node.js</li>
-          <li>PostgreSQL</li>
-          <li>Fastify</li>
-        </ul>
-      </section>
-    </div>
-  );
+function renderSection(section: Section): JSX.Element {
+  switch (section.type) {
+    case "text":
+      return (
+        <section key={section.id} id={section.id}>
+          <h2>{section.title}</h2>
+          <p>{section.content}</p>
+        </section>
+      );
+    case "list":
+      return (
+        <section key={section.id} id={section.id}>
+          <h2>{section.title}</h2>
+          <ul>
+            {section.items.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </section>
+      );
+    default:
+      return (
+        <section>
+          <h2>Unsupported Type</h2>
+        </section>
+      );
+  }
+}
+
+export function Sections({ sections }: SectionsProps) {
+  return <div>{sections.map((s) => renderSection(s))}</div>;
 }

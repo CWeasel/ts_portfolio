@@ -1,9 +1,17 @@
-export function Profile(){
-    return (
-        <section>
-            <h1>Anthony Van Roy</h1>
-            <h3>Engineer</h3>
-            <p>A generalist wanting to expand into coding and building solutions.</p>
-        </section>
-    );
+type ProfileProps = {
+  profile: {
+    name: string;
+    title: string;
+    summary: string;
+  };
+};
+
+export function Profile({ profile }: ProfileProps) {
+  return (
+    <section>
+      <h1>{profile.name}</h1>
+      <h3>{profile.title}</h3>
+      <p>{profile.summary}</p>
+    </section>
+  );
 }
