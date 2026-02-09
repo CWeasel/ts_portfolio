@@ -16,3 +16,22 @@ export type Portfolio = {
         items: string[];
     } >;
 };
+export type BlockType =
+  | "hero"
+  | "skills"
+  | "projects"
+  | "experience";
+
+export interface Block {
+  id: string;
+  type: BlockType;
+  position: number;
+  config: Record<string, unknown>;
+  data: unknown; // we’ll refine this later
+}
+
+export interface Page {
+  slug: string;
+  title: string;
+  blocks: Block[];
+}

@@ -1,25 +1,19 @@
 import { useState, useEffect } from "react";
+import { fetchPage } from "./api";
+import type { Page, Block } from "./types";
 import { Header } from "./components/Header";
-import { Profile } from "./components/Profile";
-import { Sections } from "./components/Sections";
-import type { Portfolio } from "./types";
+import { BlockRenderer } from "./components/BlockRenderer";
 import "./App.css";
 
 export default function App() {
-  const [data, setData] = useState<Portfolio|null>(null);
+  const [page, setPage] = useState<Page|null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string|null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/portfolio")
-      .then((res) => {
-        if (!res.ok){
-          throw new Error(`HTTP ${res.status}`);
-        };
-        return res.json();
-      })
-      .then((json) => {
-        setData(json);
+    fetchPage('home')
+      .then((page) => {
+        setPage(page);
         setLoading(false);
       })
       .catch((err) => {
@@ -29,22 +23,25 @@ export default function App() {
   }, []);
 
   if (loading){
-    return(<p>Loading...</p>);
+    return <main className="app">Loading portfolio…</main>;
   };
 
   if (error){
-    return(<p style={{color: "red"}}>Error: {error}.-</p>)
+    return <main className="app">Error: {error}</main>;
   }
 
-  if(!data){
-    return(<p>No data received.</p>)
+  if(!page){
+    return <main className="app">No data</main>;
   }
 
   return (
     <main className="app">
       <Header />
-      <Profile profile={data.profile}/>
-      <Sections sections={data.sections}/>
+      {page.blocks
+        .sort((a, b) => a.position - b.position)
+        .map((block: Block) => (
+          <BlockRenderer key={block.id} block={block} />
+        ))}
     </main>
   );
 }
