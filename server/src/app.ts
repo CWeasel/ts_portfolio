@@ -4,15 +4,15 @@ import fastifyPostgres from "@fastify/postgres";
 import cors from "@fastify/cors";
 import portfolioRoutes from "./routes/portfolio.js";
 import healthRoutes from "./routes/health.js";
-import { blocksRoutes } from "./routes/admin.js";
 import { createDB } from "./db/postgresql.js";
+import adminRoutes from "./routes/health.js";
 
 export const buildApp = () => {
   const app = Fastify({
     logger: true,
   });
   app.log.level = "debug";
-  
+
   // Register Cors plugin
   app.register(cors, {
     origin: "http://localhost:5173",
@@ -33,7 +33,7 @@ export const buildApp = () => {
 
   // Register routes
   app.register(portfolioRoutes, { prefix: "/api" });
-  app.register(blocksRoutes, { prefix: "/api/admin" });
+  app.register(adminRoutes, { prefix: "/api/admin" });
   app.register(healthRoutes, { prefix: "/api/health" });
 
   return app;
