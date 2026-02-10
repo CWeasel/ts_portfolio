@@ -3,9 +3,12 @@ import { fetchPage } from "./api";
 import type { Page, Block } from "./types";
 import { Header } from "./components/Header";
 import { BlockRenderer } from "./components/BlockRenderer";
+import { AdminPage } from "./components/admin/AdminPage";
 import "./App.css";
 
 export default function App() {
+  const isAdmin = window.location.pathname.startsWith("/admin");
+
   const [page, setPage] = useState<Page|null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string|null>(null);
@@ -32,6 +35,10 @@ export default function App() {
 
   if(!page){
     return <main className="app">No data</main>;
+  }
+
+  if (isAdmin) {
+    return <AdminPage page={page} />;
   }
 
   return (

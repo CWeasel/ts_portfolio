@@ -35,3 +35,40 @@ export interface Page {
   title: string;
   blocks: Block[];
 }
+
+export type HeroContent = {
+  title: string;
+  subtitle: string;
+};
+
+export type SkillsContent = {
+  skills: string[]; // will later reference real skill IDs/names
+};
+
+export type ProjectItem = {
+  id: string;
+  name: string;
+  url?: string | null;
+};
+
+export type ProjectsContent = {
+  projects: ProjectItem[];
+};
+
+export type ExperienceItem = {
+  company: string;
+  role: string;
+  from: string;      // ISO date
+  to?: string | null;
+  description?: string | null;
+};
+
+export type ExperienceContent = {
+  items: ExperienceItem[];
+};
+
+export type BlockContent =
+  | { type: "hero"; content: HeroContent }
+  | { type: "skills"; content: SkillsContent }
+  | { type: "projects"; content: ProjectsContent }
+  | { type: "experience"; content: ExperienceContent };

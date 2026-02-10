@@ -14,7 +14,7 @@ export function BlockRenderer({ block }: Props) {
       return <HeroBlock data={block.data} />;
 
     case "skills":
-      return <SkillsBlock data={block.data} />;
+      return <SkillsBlock data={block.config} />;
 
     case "projects":
       return <ProjectsBlock data={block.data} />;

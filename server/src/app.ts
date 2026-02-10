@@ -3,17 +3,20 @@ import Fastify, { fastify } from "fastify";
 import fastifyPostgres from "@fastify/postgres";
 import cors from "@fastify/cors";
 import portfolioRoutes from "./routes/portfolio.js";
-import adminRoutes from "./routes/admin.js";
+import healthRoutes from "./routes/health.js";
+import { blocksRoutes } from "./routes/admin.js";
 import { createDB } from "./db/postgresql.js";
 
 export const buildApp = () => {
   const app = Fastify({
     logger: true,
   });
-
+  app.log.level = "debug";
+  
   // Register Cors plugin
   app.register(cors, {
     origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   });
 
   // Register and make 'pg' available throughout the app
@@ -30,7 +33,8 @@ export const buildApp = () => {
 
   // Register routes
   app.register(portfolioRoutes, { prefix: "/api" });
-  app.register(adminRoutes, { prefix: "/api/admin" });
+  app.register(blocksRoutes, { prefix: "/api/admin" });
+  app.register(healthRoutes, { prefix: "/api/health" });
 
   return app;
 };
