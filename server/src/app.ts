@@ -5,7 +5,7 @@ import cors from "@fastify/cors";
 import portfolioRoutes from "./routes/portfolio.js";
 import healthRoutes from "./routes/health.js";
 import { createDB } from "./db/postgresql.js";
-import adminRoutes from "./routes/health.js";
+import adminRoutes from "./routes/admin/admin.routes.js";
 
 export const buildApp = () => {
   const app = Fastify({

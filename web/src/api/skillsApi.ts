@@ -1,7 +1,7 @@
 export type Skill = {
   id: string;
   name: string;
-  level?: number | null;
+  proficiency?: number | null;
   category?: string | null;
 };
 

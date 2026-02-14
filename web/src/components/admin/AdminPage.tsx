@@ -1,12 +1,23 @@
 import type { Page } from "../../types";
 import { AdminHeader } from "./AdminHeader";
 import { BlockList } from "./BlockList";
+import { SkillsAdmin } from "./skills/SkillsPage";
+import { CompanyAdmin } from "./companies/CompaniesPage";
+import { ProjectsAdmin } from "./projects/ProjectsPage";
 
 interface Props {
-    page: Page;
+  page: Page;
 }
 
 export function AdminPage({ page }: Props) {
+    switch (window.location.pathname){
+        case "/admin/skills":
+            return SkillsAdmin();
+        case "/admin/companies":
+            return CompanyAdmin();
+        case "/admin/projects":
+            return ProjectsAdmin();
+    }
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
       <aside
@@ -20,6 +31,15 @@ export function AdminPage({ page }: Props) {
         <ul>
           <li>
             <strong>Home</strong>
+          </li>
+          <li>
+            <a href="/admin/companies">Companies</a>
+          </li>
+          <li>
+            <a href="/admin/projects">Projects</a>
+          </li>
+          <li>
+            <a href="/admin/skills">Skills</a>
           </li>
         </ul>
       </aside>
