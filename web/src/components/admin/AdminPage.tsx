@@ -9,15 +9,20 @@ interface Props {
   page: Page;
 }
 
+function loadSubPage({ page }: Props) {
+  switch (window.location.pathname) {
+    case "/admin/skills":
+      return SkillsAdmin();
+    case "/admin/companies":
+      return CompanyAdmin();
+    case "/admin/projects":
+      return ProjectsAdmin();
+    default:
+      return <BlockList blocks={page.blocks} />
+  }
+}
+
 export function AdminPage({ page }: Props) {
-    switch (window.location.pathname){
-        case "/admin/skills":
-            return SkillsAdmin();
-        case "/admin/companies":
-            return CompanyAdmin();
-        case "/admin/projects":
-            return ProjectsAdmin();
-    }
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
       <aside
@@ -30,7 +35,7 @@ export function AdminPage({ page }: Props) {
         <h3>Pages</h3>
         <ul>
           <li>
-            <strong>Home</strong>
+            <a href="/admin">Home</a>
           </li>
           <li>
             <a href="/admin/companies">Companies</a>
@@ -46,7 +51,7 @@ export function AdminPage({ page }: Props) {
 
       <main style={{ flex: 1, padding: "1rem" }}>
         <AdminHeader page={page} />
-        <BlockList blocks={page.blocks} />
+        {loadSubPage({ page })}
       </main>
     </div>
   );
