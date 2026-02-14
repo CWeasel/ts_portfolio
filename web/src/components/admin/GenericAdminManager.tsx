@@ -7,7 +7,7 @@ interface Props<T> {
   schema: ModelSchema<T>;
 }
 
-export function GenericAdminManager<T>({ schema }: Props<T>) {
+export function GenericAdminManager<T>({ schema }: Props<T>, allowAddButton = true) {
   const { items, loading, error, reload, create, update, remove } =
     useResource<T>(createCrudApi(schema.endpoint) as any);
   const [editing, setEditing] = useState<T | null>(null);
@@ -58,7 +58,7 @@ export function GenericAdminManager<T>({ schema }: Props<T>) {
           ))}
         </tbody>
       </table>
-      {!editing && <button onClick={() => openCreateForm()}>New</button>}
+      {allowAddButton && (!editing && <button onClick={() => openCreateForm()}>New</button>)}
 
       {editing && (
         <div className="admin-form">

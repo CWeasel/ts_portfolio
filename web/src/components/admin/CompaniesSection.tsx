@@ -1,5 +1,5 @@
-import { GenericAdminManager } from "../GenericAdminManager";
-import type { ModelSchema } from "../../../types/admin";
+import { GenericAdminManager } from "./GenericAdminManager";
+import type { ModelSchema } from "../../types/admin";
 
 interface Company {
   id: string;

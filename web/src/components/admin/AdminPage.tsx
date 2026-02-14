@@ -1,9 +1,9 @@
 import type { Page } from "../../types";
 import { AdminHeader } from "./AdminHeader";
 import { BlockList } from "./BlockList";
-import { SkillsAdmin } from "./skills/SkillsPage";
-import { CompanyAdmin } from "./companies/CompaniesPage";
-import { ProjectsAdmin } from "./projects/ProjectsPage";
+import { SkillsAdmin } from "./SkillsSection";
+import { CompanyAdmin } from "./CompaniesSection";
+import { ProjectsAdmin } from "./ProjectsSection";
 
 interface Props {
   page: Page;
