@@ -2,28 +2,15 @@ import React, { useState } from "react";
 import type { ModelSchema } from "../../types/admin";
 import { useResource } from "../../hooks/useResource";
 import { createCrudApi } from "../../api/createCrudApi";
-import { ConfirmDelete } from "./ConfirmDelete";
 
 interface Props<T> {
   schema: ModelSchema<T>;
 }
 
-export function GenericAdminManager<T>({
-  schema
-}: Props<T>) {
+export function ProfileManager({ schema }: Props<T>) {
   const { items, loading, error, reload, create, update, remove } =
     useResource<T>(createCrudApi(schema.endpoint) as any);
   const [editing, setEditing] = useState<T | null>(null);
-  const [deleting, setDeleting] = useState<T | null>(null);
-
-
-  const openCreateForm = () => {
-    const emptyItem = schema.fields.reduce((acc, field) => {
-      acc[field.key as keyof T] = (field.type === "number" ? 0 : "") as any;
-      return acc;
-    }, {} as T);
-    setEditing(emptyItem);
-  };
 
   const handleSave = async (item: Partial<T>) => {
     // Implement create/update logic here
@@ -31,7 +18,7 @@ export function GenericAdminManager<T>({
     if (isEdit) {
       await update(item.id as string, item);
     } else {
-      await create(item);
+    //   await create(item);
     }
     console.log("Saving item:", item);
     setEditing(null);
@@ -50,31 +37,23 @@ export function GenericAdminManager<T>({
           </tr>
         </thead>
         <tbody>
-          {items.map((item) => (
-            <tr key={item.id}>
-              {schema.fields.map((f) => (
-                <td key={f.key}>{String(item[f.key as keyof T])}</td>
-              ))}
-              <td>
-                <button onClick={() => setEditing(item)}>Edit</button>
-              </td>
-              <td>
-                <button onClick={() => setDeleting(item)}>Delete</button>
-              </td>
-            </tr>
-          ))}
+          <tr key={items.id}>
+            {schema.fields.map((f) => (
+              <td key={f.key}>{String(items[f.key as keyof T])}</td>
+            ))}
+            <td>
+              <button onClick={() => setEditing(items)}>Edit</button>
+            </td>
+          </tr>
         </tbody>
       </table>
-      {!editing && (
-        <button onClick={() => openCreateForm()}>New</button>
-      )}
 
       {editing && (
         <div className="admin-form">
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              handleSave(editing);
+                handleSave(editing);
             }}
           >
             {schema.fields.map((f) => (
@@ -94,17 +73,6 @@ export function GenericAdminManager<T>({
           </form>
         </div>
       )}
-      {deleting && (
-        <ConfirmDelete
-          item={deleting}
-          onConfirm={async () => {
-            await remove(deleting.id);
-            setDeleting(null);
-          }}
-          onCancel={() => setDeleting(null)}
-        />
-      ) }
     </div>
   );
 }
-

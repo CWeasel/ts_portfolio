@@ -16,6 +16,7 @@ export async function profileRoutes(app: FastifyInstance) {
 
   // PUT update profile (singleton - always updates the one profile)
   app.put<{
+    Params: { id: string };
     Body: {
       full_name?: string;
       headline?: string;
@@ -27,7 +28,7 @@ export async function profileRoutes(app: FastifyInstance) {
       photo_url?: string;
     };
   }>(
-    "/profile",
+    "/profile/:id",
     async (req, res) => {
       const { full_name, headline, summary, location, email, github_url, linkedin_url, photo_url } = req.body;
 
