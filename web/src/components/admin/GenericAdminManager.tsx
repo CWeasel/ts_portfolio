@@ -3,6 +3,7 @@ import type { ModelSchema } from "../../types/admin";
 import { useResource } from "../../hooks/useResource";
 import { createCrudApi } from "../../api/createCrudApi";
 import { ConfirmDelete } from "./ConfirmDelete";
+import { GenericFormManager } from "./GenericFormManager";
 
 interface Props<T> {
   schema: ModelSchema<T>;
@@ -70,29 +71,12 @@ export function GenericAdminManager<T>({
       )}
 
       {editing && (
-        <div className="admin-form">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSave(editing);
-            }}
-          >
-            {schema.fields.map((f) => (
-              <div className="admin-form-item" key={f.key}>
-                <label htmlFor={f.key}>{f.label}</label>
-                <input
-                  type={f.type}
-                  value={(editing[f.key as keyof T] as any) || ""}
-                  onChange={(e) =>
-                    setEditing({ ...editing, [f.key]: e.target.value })
-                  }
-                />
-              </div>
-            ))}
-            <button type="submit">Save</button>
-            <button onClick={() => setEditing(null)}>Cancel</button>
-          </form>
-        </div>
+        <GenericFormManager
+        schema={schema}
+          initialData={editing}
+          onSubmit={handleSave}
+          onCancel={() => setEditing(null)}
+        />
       )}
       {deleting && (
         <ConfirmDelete

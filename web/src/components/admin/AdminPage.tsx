@@ -5,6 +5,7 @@ import { SkillsAdmin } from "./SkillsSection";
 import { CompanyAdmin } from "./CompaniesSection";
 import { ProjectsAdmin } from "./ProjectsSection";
 import { ProfileAdmin } from "./ProfileSection";
+import { RolesAdmin } from "./RoleSection";
 
 interface Props {
   page: Page;
@@ -20,6 +21,8 @@ function loadSubPage({ page }: Props) {
       return ProjectsAdmin();
     case "/admin/profile":
       return ProfileAdmin();
+    case "/admin/roles":
+      return RolesAdmin();
     default:
       return <BlockList blocks={page.blocks} />;
   }
@@ -51,6 +54,9 @@ export function AdminPage({ page }: Props) {
           </li>
           <li>
             <a href="/admin/skills">Skills</a>
+          </li>
+          <li>
+            <a href="/admin/roles">Roles</a>
           </li>
         </ul>
       </aside>

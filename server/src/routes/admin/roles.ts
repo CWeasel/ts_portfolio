@@ -1,10 +1,21 @@
 import type { FastifyInstance } from "fastify";
 
+async function validateCompanyExists(
+  app: FastifyInstance,
+  companyId: string,
+): Promise<boolean> {
+  const { rows } = await app.pg.query(
+    `SELECT id FROM companies WHERE id = $1`,
+    [companyId],
+  );
+  return rows.length > 0;
+}
+
 export async function roleRoutes(app: FastifyInstance) {
   app.get("/roles", async (req, res) => {
     const { rows } = await app.pg.query(
       `
-            SELECT title, start_date, end_date, description
+            SELECT company_id, title, start_date, end_date, description
             FROM roles
             `,
     );
@@ -15,7 +26,7 @@ export async function roleRoutes(app: FastifyInstance) {
     const { id } = req.params;
     const { rows } = await app.pg.query(
       `
-            SELECT title, start_date, end_date, description
+            SELECT company_id, title, start_date, end_date, description
             FROM roles
             WHERE id = $1
         `,
@@ -31,13 +42,23 @@ export async function roleRoutes(app: FastifyInstance) {
 
   app.post<{
     Body: {
+      company_id: string;
       title: string;
       start_date: string;
       end_date?: string;
       description?: string;
     };
   }>("/roles", async (req, res) => {
-    const { title, start_date, end_date, description } = req.body;
+    const { company_id, title, start_date, end_date, description } = req.body;
+
+    if(!company_id || company_id.trim() === ""){
+      return res.status(400).send({ error: "Company is required" });
+    }
+
+    const companyExists = await validateCompanyExists(app, company_id.trim());
+    if (!companyExists) {
+      return res.status(400).send({ error: "Company not found" });
+    }
     
     if (!title || title.trim() === "") {
       return res.status(400).send({ error: "Role title is required" });
@@ -49,10 +70,11 @@ export async function roleRoutes(app: FastifyInstance) {
 
     const { rows } = await app.pg.query(
         `
-        INSERT into roles (title, start_date, end_date, description)
-        VALUES ($1, $2, $3, $4)
-        RETURNING id, title, start_date, end_date, description, created_at, updated_at
+        INSERT into roles (company_id, title, start_date, end_date, description)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING id, company_id, title, start_date, end_date, description, created_at, updated_at
         `,[
+            company_id.trim(), 
             title.trim(),
             start_date,
             end_date || null,

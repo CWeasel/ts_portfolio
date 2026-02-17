@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import type { ModelSchema } from "../../types/admin";
 import { useResource } from "../../hooks/useResource";
 import { createCrudApi } from "../../api/createCrudApi";
@@ -8,7 +8,7 @@ interface Props<T> {
 }
 
 export function ProfileManager({ schema }: Props<T>) {
-  const { items, loading, error, reload, create, update, remove } =
+  const { items, loading, error, update } =
     useResource<T>(createCrudApi(schema.endpoint) as any);
   const [editing, setEditing] = useState<T | null>(null);
 
