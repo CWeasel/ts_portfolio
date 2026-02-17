@@ -1,13 +1,10 @@
 import type { FastifyInstance } from "fastify";
+import { getCompanies, createCompany, updateCompany, deleteCompany } from "../../controllers/admin/companies.js";
 
 export async function companyRoutes(app: FastifyInstance) {
   // GET all companies
   app.get("/companies", async (req, res) => {
-    const { rows } = await app.pg.query(`
-      select id, name, website, created_at, updated_at
-      from companies
-      order by created_at desc
-    `);
+    const rows = await getCompanies(app);
     return rows;
   });
 
@@ -16,14 +13,7 @@ export async function companyRoutes(app: FastifyInstance) {
     "/companies/:id",
     async (req, res) => {
       const { id } = req.params;
-      const { rows } = await app.pg.query(
-        `
-        select id, name, website, created_at, updated_at
-        from companies
-        where id = $1
-        `,
-        [id]
-      );
+     const rows = await getCompanies(app, id);
       if (rows.length === 0) {
         return res.status(404).send({ error: "Company not found" });
       }
@@ -41,16 +31,7 @@ export async function companyRoutes(app: FastifyInstance) {
         return res.status(400).send({ error: "Company name is required" });
       }
 
-      const { rows } = await app.pg.query(
-        `
-        insert into companies (name, website)
-        values ($1, $2)
-        returning id, name, website, created_at, updated_at
-        `,
-        [name.trim(), website?.trim() || null]
-      );
-
-      return rows[0];
+      return await createCompany(app, name, website);
     }
   );
 
@@ -61,51 +42,7 @@ export async function companyRoutes(app: FastifyInstance) {
       const { id } = req.params;
       const { name, website } = req.body;
 
-      // Check if company exists
-      const { rows: existingRows } = await app.pg.query(
-        `select id from companies where id = $1`,
-        [id]
-      );
-
-      if (existingRows.length === 0) {
-        return res.status(404).send({ error: "Company not found" });
-      }
-
-      // Build update query dynamically
-      const updates: string[] = [];
-      const values: (string | null)[] = [];
-      let paramCount = 1;
-
-      if (name !== undefined) {
-        updates.push(`name = $${paramCount}`);
-        values.push(name.trim());
-        paramCount++;
-      }
-
-      if (website !== undefined) {
-        updates.push(`website = $${paramCount}`);
-        values.push(website.trim() || null);
-        paramCount++;
-      }
-
-      if (updates.length === 0) {
-        return res.status(400).send({ error: "No fields to update" });
-      }
-
-      updates.push(`updated_at = now()`);
-      values.push(id);
-
-      const { rows } = await app.pg.query(
-        `
-        update companies
-        set ${updates.join(", ")}
-        where id = $${paramCount}
-        returning id, name, website, created_at, updated_at
-        `,
-        values
-      );
-
-      return rows[0];
+      return await updateCompany(app, id, name, website);
     }
   );
 
@@ -115,20 +52,7 @@ export async function companyRoutes(app: FastifyInstance) {
     async (req, res) => {
       const { id } = req.params;
 
-      const { rows } = await app.pg.query(
-        `
-        delete from companies
-        where id = $1
-        returning id, name, website, created_at, updated_at
-        `,
-        [id]
-      );
-
-      if (rows.length === 0) {
-        return res.status(404).send({ error: "Company not found" });
-      }
-
-      return rows[0];
+      return await deleteCompany(app, id);
     }
   );
 }
