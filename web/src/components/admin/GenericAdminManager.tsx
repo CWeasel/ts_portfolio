@@ -33,26 +33,31 @@ export function GenericAdminManager<T>({
           for (const field of schema.fields) {
             if (field.type === "select" && field.optionsEndpoint) {
               const fieldValue = item[field.key as keyof T];
-              if (fieldValue) {
-                try {
-                  const response = await fetch(field.optionsEndpoint);
-                  if (response.ok) {
-                    const options = await response.json();
-                    const selectedOption = options.find(
-                      (opt: any) => opt.id === fieldValue
-                    );
-                    if (selectedOption) {
+              try {
+                const response = await fetch(field.optionsEndpoint);
+                if (!response.ok) continue;
+                const options = await response.json();
+
+                if (field.multiple && Array.isArray(fieldValue)) {
+                  // Resolve each id to label
+                  const labels: string[] = (fieldValue as unknown as string[]).map(
+                    (id) => {
+                      const found = options.find((opt: any) => opt.id === id);
+                      if (!found) return String(id);
                       const labelKey = field.optionLabelKey || "name";
-                      resolvedItem.__resolved![field.key] =
-                        selectedOption[labelKey] || selectedOption.id;
-                    }
-                  }
-                } catch (err) {
-                  console.error(
-                    `Failed to resolve ${field.key} for item`,
-                    err
+                      return found[labelKey] || found.id;
+                    },
                   );
+                  resolvedItem.__resolved![field.key] = labels.join(", ");
+                } else if (!field.multiple && fieldValue) {
+                  const selectedOption = options.find((opt: any) => opt.id === fieldValue);
+                  if (selectedOption) {
+                    const labelKey = field.optionLabelKey || "name";
+                    resolvedItem.__resolved![field.key] = selectedOption[labelKey] || selectedOption.id;
+                  }
                 }
+              } catch (err) {
+                console.error(`Failed to resolve ${field.key} for item`, err);
               }
             }
           }
@@ -74,7 +79,11 @@ export function GenericAdminManager<T>({
 
   const openCreateForm = () => {
     const emptyItem = schema.fields.reduce((acc, field) => {
-      acc[field.key as keyof T] = (field.type === "number" ? 0 : "") as any;
+      if (field.multiple) {
+        acc[field.key as keyof T] = [] as any;
+      } else {
+        acc[field.key as keyof T] = (field.type === "number" ? 0 : "") as any;
+      }
       return acc;
     }, {} as T);
     setEditing(emptyItem);
@@ -108,10 +117,17 @@ export function GenericAdminManager<T>({
           {resolvedItems.map((item) => (
             <tr key={item.id}>
               {schema.fields.map((f) => {
-                const displayValue =
-                  f.type === "select" && item.__resolved?.[f.key]
-                    ? item.__resolved[f.key]
-                    : String(item[f.key as keyof T]);
+                let displayValue: string;
+                if (f.type === "select" && item.__resolved?.[f.key]) {
+                  displayValue = item.__resolved[f.key];
+                } else {
+                  const raw = item[f.key as keyof T];
+                  if (Array.isArray(raw)) {
+                    displayValue = raw.join(", ");
+                  } else {
+                    displayValue = String(raw);
+                  }
+                }
                 return <td key={f.key}>{displayValue}</td>;
               })}
               <td>

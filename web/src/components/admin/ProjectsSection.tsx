@@ -10,6 +10,7 @@ interface Project {
   repo_url?: string;
   start_date?: string;
   end_date?: string;
+  skill_ids?: string[];
   featured?: boolean;
 };
 
@@ -17,6 +18,7 @@ const ProjectSchema: ModelSchema<Project> = {
   name: "project",
   endpoint: "http://localhost:3000/api/admin/projects",
   fields: [
+  { key: "skill_ids", label: "Skills", type: "select", required: false, optionsEndpoint: "http://localhost:3000/api/admin/skills", optionLabelKey: "name", multiple: true },
     {key:"name", label:"Project Name", type:"text", required: true },
     {key:"summary", label:"Project Summary", type:"text", required: true },
     {key:"description", label:"Project Description", type:"text", required: false },

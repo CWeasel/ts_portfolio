@@ -5,6 +5,7 @@ export interface FieldConfig {
     required?: boolean;
     optionsEndpoint?: string;
     optionLabelKey?: string;
+    multiple?: boolean;
 }
 
 export interface ModelSchema<T>{

@@ -1,6 +1,7 @@
 import { useForm, FormProvider } from "react-hook-form";
 import type { ModelSchema } from "../../types/admin";
 import { SelectResourceField } from "./SelectResourceField";
+import { MultiSelectResourceField } from "./MultiSelectResourceField";
 
 interface Props<T> {
   schema: ModelSchema<T>;
@@ -69,6 +70,15 @@ export function GenericFormManager<T>({
 
         {schema.fields.map((f) => {
           if (f.type === "select") {
+            if (f.multiple) {
+              return (
+                <MultiSelectResourceField
+                  key={f.key}
+                  field={f}
+                  optionLabelKey={f.optionLabelKey}
+                />
+              );
+            }
             return (
               <SelectResourceField
                 key={f.key}
