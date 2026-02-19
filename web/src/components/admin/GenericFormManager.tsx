@@ -15,10 +15,30 @@ export function GenericFormManager<T>({
   onSubmit,
   onCancel,
 }: Props<T>) {
-  // Map null values to empty string for form fields
+  // Helper function to format date values for input fields
+  const formatDateValue = (value: any): string => {
+    if (!value) return "";
+    // If it's an ISO string, extract just the date part (YYYY-MM-DD)
+    if (typeof value === "string" && value.includes("T")) {
+      return value.split("T")[0];
+    }
+    return String(value);
+  };
+
+  // Map null values to empty string for form fields and format dates
   const normalizedInitialData = initialData
     ? Object.fromEntries(
-        Object.entries(initialData).map(([k, v]) => [k, v === null ? "" : v]),
+        Object.entries(initialData).map(([k, v]) => {
+          if (v === null) {
+            return [k, ""];
+          }
+          // Find if this field is a date field
+          const field = schema.fields.find((f) => f.key === k);
+          if (field?.type === "date") {
+            return [k, formatDateValue(v)];
+          }
+          return [k, v];
+        }),
       )
     : {};
 

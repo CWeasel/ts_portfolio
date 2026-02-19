@@ -1,5 +1,4 @@
 import type { FastifyInstance } from "fastify";
-import { error } from "node:console";
 
 export const getCompanies = async (
   app: FastifyInstance,
