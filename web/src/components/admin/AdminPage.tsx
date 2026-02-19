@@ -1,3 +1,4 @@
+import { Route, Routes, Link } from "react-router-dom";
 import type { Page } from "../../types";
 import { AdminHeader } from "./AdminHeader";
 import { BlockList } from "./BlockList";
@@ -9,23 +10,6 @@ import { RolesAdmin } from "./RoleSection";
 
 interface Props {
   page: Page;
-}
-
-function loadSubPage({ page }: Props) {
-  switch (window.location.pathname) {
-    case "/admin/skills":
-      return SkillsAdmin();
-    case "/admin/companies":
-      return CompanyAdmin();
-    case "/admin/projects":
-      return ProjectsAdmin();
-    case "/admin/profile":
-      return ProfileAdmin();
-    case "/admin/roles":
-      return RolesAdmin();
-    default:
-      return <BlockList blocks={page.blocks} />;
-  }
 }
 
 export function AdminPage({ page }: Props) {
@@ -41,29 +25,35 @@ export function AdminPage({ page }: Props) {
         <h3>Pages</h3>
         <ul>
           <li>
-            <a href="/admin">Home</a>
+            <Link to="/admin">Home</Link>
           </li>
           <li>
-            <a href="/admin/profile">Profile</a>
+            <Link to="/admin/profile">Profile</Link>
           </li>
           <li>
-            <a href="/admin/companies">Companies</a>
+            <Link to="/admin/companies">Companies</Link>
           </li>
           <li>
-            <a href="/admin/projects">Projects</a>
+            <Link to="/admin/projects">Projects</Link>
           </li>
           <li>
-            <a href="/admin/skills">Skills</a>
+            <Link to="/admin/skills">Skills</Link>
           </li>
           <li>
-            <a href="/admin/roles">Roles</a>
+            <Link to="/admin/roles">Roles</Link>
           </li>
         </ul>
       </aside>
 
       <main style={{ flex: 1, padding: "1rem" }}>
         <AdminHeader page={page} />
-        {loadSubPage({ page })}
+        <Routes>
+          <Route path="/admin/profile" element={<ProfileAdmin />} />
+          <Route path="/admin/companies" element={<CompanyAdmin />} />
+          <Route path="/admin/projects" element={<ProjectsAdmin />} />
+          <Route path="/admin/skills" element={<SkillsAdmin />} />
+          <Route path="/admin/roles" element={<RolesAdmin />} />
+        </Routes>
       </main>
     </div>
   );
