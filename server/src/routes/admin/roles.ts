@@ -3,17 +3,6 @@ import { getRoles, createRole, updateRole, deleteRole } from "../../controllers/
 
 const endpoint:string = "/roles";
 
-async function validateCompanyExists(
-  app: FastifyInstance,
-  companyId: string,
-): Promise<boolean> {
-  const { rows } = await app.pg.query(
-    `SELECT id FROM companies WHERE id = $1`,
-    [companyId],
-  );
-  return rows.length > 0;
-}
-
 export async function roleRoutes(app: FastifyInstance) {
   app.get(endpoint, async (req, res) => {
     return await getRoles(app);
@@ -37,17 +26,13 @@ export async function roleRoutes(app: FastifyInstance) {
       start_date: string;
       end_date?: string;
       description?: string;
+      skill_ids?: string[],
     };
   }>(endpoint, async (req, res) => {
-    const { company_id, title, start_date, end_date, description } = req.body;
+    const { company_id, title, start_date, end_date, description, skill_ids } = req.body;
 
     if(!company_id || company_id.trim() === ""){
       return res.status(400).send({ error: "Company is required" });
-    }
-
-    const companyExists = await validateCompanyExists(app, company_id.trim());
-    if (!companyExists) {
-      return res.status(400).send({ error: "Company not found" });
     }
     
     if (!title || title.trim() === "") {
@@ -65,6 +50,7 @@ export async function roleRoutes(app: FastifyInstance) {
       start_date,
       end_date,
       description,
+      skill_ids
     );
 
     if (rows.length === 0){
@@ -84,10 +70,11 @@ export async function roleRoutes(app: FastifyInstance) {
       start_date: string;
       end_date?: string;
       description?: string;
+      skill_ids?: string[],
     };
   }>(`${endpoint}/:id`, async (req, res) =>{
     const { id } = req.params;
-    const { company_id, title, start_date, end_date, description } = req.body;
+    const { company_id, title, start_date, end_date, description, skill_ids } = req.body;
     
     if(!company_id || company_id.trim() === ""){
       return res.status(400).send({ error: "Company is required" });
@@ -101,6 +88,7 @@ export async function roleRoutes(app: FastifyInstance) {
       start_date,
       end_date,
       description,
+      skill_ids,
     );
 
     if (rows.length === 0) {

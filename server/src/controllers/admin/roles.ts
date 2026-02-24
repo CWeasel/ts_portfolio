@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { getCompanies } from "../../controllers/admin/companies";
+import { updateSkillForRole } from "./role_skill";
 
 const endpoint: string = "/roles";
 
@@ -34,6 +35,7 @@ export const createRole = async (
   start_date: string,
   end_date?: string,
   description?: string,
+  skill_ids?: string[],
 ) => {
   // Validate company exists
   const companyExists = await getCompanies(app, company_id.trim());
@@ -55,7 +57,9 @@ export const createRole = async (
     ],
   );
 
-  return rows[0];
+  const roleSkills = await updateSkillForRole(app, rows[0].id, skill_ids || []);
+
+  return { ...rows[0], skills: roleSkills };
 };
 
 export const updateRole = async (
@@ -66,6 +70,7 @@ export const updateRole = async (
   start_date?: string,
   end_date?: string,
   description?: string,
+  skill_ids?: string[],
 ) => {
   // Check if role exists
   const existingRows = await getRoles(app, id);
@@ -133,8 +138,9 @@ export const updateRole = async (
         `,
     values,
   );
+  const roleSkills = await updateSkillForRole(app, rows[0].id, skill_ids || []);
 
-  return rows[0];
+  return { ...rows[0], skills: roleSkills };
 };
 
 export const deleteRole = async (app: FastifyInstance, id: string) => {
@@ -144,6 +150,8 @@ export const deleteRole = async (app: FastifyInstance, id: string) => {
     throw new Error("Role not found.");
   }
 
+  const emptySkills = await updateSkillForRole(app, id, []);
+
   const { rows } = await app.pg.query(
     `
         DELETE FROM roles
@@ -152,5 +160,5 @@ export const deleteRole = async (app: FastifyInstance, id: string) => {
       `,
     [id],
   );
-  return rows[0];
+  return { ...rows[0], skills: emptySkills };
 };

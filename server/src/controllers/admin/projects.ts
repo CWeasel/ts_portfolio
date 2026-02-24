@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { get } from "node:http";
+import { updateSkillForProject } from "./project_skill";
 
 export const getProjects = async (
   app: FastifyInstance,
@@ -38,6 +38,7 @@ export const createProject = async (
   start_date?: string,
   end_date?: string,
   featured?: boolean,
+  skill_ids?: string[],
 ) => {
   const { rows } = await app.pg.query(
     `
@@ -57,7 +58,13 @@ export const createProject = async (
     ],
   );
 
-  return rows[0];
+  const projectSkills = await updateSkillForProject(
+    app,
+    rows[0].id,
+    skill_ids || [],
+  );
+
+  return { ...rows[0], skills: projectSkills };
 };
 
 export const updateProject = async (
@@ -71,6 +78,7 @@ export const updateProject = async (
   start_date?: string,
   end_date?: string,
   featured?: boolean,
+  skill_ids?: string[],
 ) => {
   // Check if project exists
   const existingRows = await getProjects(app, id);
@@ -92,7 +100,7 @@ export const updateProject = async (
     paramCount++;
   }
 
-  if        (description !== undefined) {
+  if (description !== undefined) {
     updates.push(`description = $${paramCount}`);
     values.push(description.trim() || null);
     paramCount++;
@@ -148,7 +156,9 @@ export const updateProject = async (
     throw new Error("Project not found.");
   }
 
-  return rows[0];
+  const projectSkills = await updateSkillForProject(app, id, skill_ids || []);
+
+  return { ...rows[0], skills: projectSkills };
 };
 
 export const deleteProject = async (app: FastifyInstance, id: string) => {
@@ -161,6 +171,8 @@ export const deleteProject = async (app: FastifyInstance, id: string) => {
   if (existingRows.length === 0) {
     throw new Error("Project not found.");
   }
+
+  const deleteSkills = await updateSkillForProject(app, id, []);
 
   const { rows } = await app.pg.query(
     `
