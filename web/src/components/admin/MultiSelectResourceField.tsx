@@ -24,7 +24,7 @@ export function MultiSelectResourceField({ field, optionLabelKey = "name" }: Pro
       }
 
       try {
-        const res = await fetch(field.optionsEndpoint);
+        const res = await fetch(field.optionsEndpoint, { credentials: "include" });
         if (!res.ok) throw new Error("Failed to fetch options");
         const data = await res.json();
         setOptions(Array.isArray(data) ? data : []);

@@ -3,13 +3,13 @@ export function createCrudApi<T extends { id?: string }>(baseUrl: string) {
 
   return {
     async list(): Promise<T[]> {
-      const res = await fetch(url);
+      const res = await fetch(url, { credentials: "include" });
       if (!res.ok) throw new Error("Failed to fetch list");
       return res.json();
     },
 
     async get(id: string): Promise<T> {
-      const res = await fetch(`${url}/${id}`);
+      const res = await fetch(`${url}/${id}`, { credentials: "include" });
       if (!res.ok) throw new Error("Failed to fetch item");
       return res.json();
     },
@@ -19,6 +19,7 @@ export function createCrudApi<T extends { id?: string }>(baseUrl: string) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
+        credentials: "include",
       });
       if (!res.ok) {
         try {
@@ -36,6 +37,7 @@ export function createCrudApi<T extends { id?: string }>(baseUrl: string) {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
+        credentials: "include",
       });
       if (!res.ok) {
         try {
@@ -49,7 +51,7 @@ export function createCrudApi<T extends { id?: string }>(baseUrl: string) {
     },
 
     async remove(id: string): Promise<void> {
-      const res = await fetch(`${url}/${id}`, { method: "DELETE" });
+      const res = await fetch(`${url}/${id}`, { method: "DELETE", credentials: "include", });
       if (!res.ok) throw new Error("Failed to delete item");
     },
   };

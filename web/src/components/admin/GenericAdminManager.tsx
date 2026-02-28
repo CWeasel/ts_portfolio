@@ -34,7 +34,7 @@ export function GenericAdminManager<T>({
             if (field.type === "select" && field.optionsEndpoint) {
               const fieldValue = item[field.key as keyof T];
               try {
-                const response = await fetch(field.optionsEndpoint);
+                const response = await fetch(field.optionsEndpoint, { credentials: "include" });
                 if (!response.ok) continue;
                 const options = await response.json();
 

@@ -5,7 +5,7 @@ import cors from "@fastify/cors";
 import portfolioGroupedRoutes from "./routes/portfolio.router.ts";
 import healthRoutes from "./routes/health.ts";
 import { createDB } from "./db/postgresql.ts";
-import adminRoutes from "./routes/admin/admin.routes.ts";
+import adminRoutes, { requireAdmin } from "./routes/admin/admin.routes.ts";
 import cookie from "@fastify/cookie";
 import session from "@fastify/session";
 
@@ -19,12 +19,13 @@ export const buildApp = () => {
   app.register(cors, {
     origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    credentials: true,
   });
-  
+
   // Register cookie and session plugins
   app.register(cookie);
   app.register(session, {
-    secret: process.env.SESSION_SECRET || "default_session_secret",
+    secret: process.env.SESSION_SECRET || "default_session_secret_but_longer_amdçlopa",
     cookie: {
       secure: false,
       httpOnly: true,
@@ -47,7 +48,10 @@ export const buildApp = () => {
 
   // Register routes
   app.register(portfolioGroupedRoutes, { prefix: "/api" });
-  app.register(adminRoutes, { prefix: "/api/admin" });
+  app.register(async (aRoutes) => {
+    aRoutes.addHook("preHandler", requireAdmin);
+    aRoutes.register(adminRoutes, { prefix: "/api/admin" });
+  });
   app.register(healthRoutes, { prefix: "/api/health" });
 
   return app;

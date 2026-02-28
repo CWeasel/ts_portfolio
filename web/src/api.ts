@@ -1,5 +1,5 @@
 export async function fetchPage(slug: string){
-    const res = await fetch(`http://localhost:3000/api/pages/${slug}`);
+    const res = await fetch(`http://localhost:3000/api/pages/${slug}`, { credentials: "include" });
     if (!res.ok){
         throw new Error(`Failed to load page: ${res.status}`);
     }
@@ -12,6 +12,7 @@ export async function updateBlock(id: string, content:any){
         method: "PATCH",
         headers: { "Content-Type": "application/json", },
         body: JSON.stringify({data: content}),
+        credentials: "include",
     });
 
     if(!res.ok){

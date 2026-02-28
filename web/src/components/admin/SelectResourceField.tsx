@@ -30,7 +30,7 @@ export function SelectResourceField({
       }
 
       try {
-        const response = await fetch(field.optionsEndpoint);
+        const response = await fetch(field.optionsEndpoint, { credentials: "include" });
         if (!response.ok) {
           throw new Error("Failed to fetch options");
         }

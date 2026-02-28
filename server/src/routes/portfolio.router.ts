@@ -3,6 +3,6 @@ import { authenticationRoutes } from "./authentication.ts";
 import  portfolioRoutes from "./portfolio.ts";
 
 export default function portfolioGroupedRoutes(app: FastifyInstance) {
-  app.register(authenticationRoutes);
+  app.register(authenticationRoutes, { prefix: "/auth" });
   app.register(portfolioRoutes);
 }

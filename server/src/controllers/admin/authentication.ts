@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import bcrypt from "bcrypt";
+import { log } from "node:console";
 
 export const authenticateAdmin = async (
   app: FastifyInstance,
@@ -12,6 +13,7 @@ export const authenticateAdmin = async (
   );
 
   if (rows.length === 0) {
+    app.log.warn(`Authentication failed for ${username}: user not found.`);
     throw new Error("Invalid credentials.");
   }
 
@@ -19,6 +21,7 @@ export const authenticateAdmin = async (
   const isPasswordValid = await bcrypt.compare(password, user.password_hash);
 
   if (!isPasswordValid) {
+    app.log.warn(`Authentication failed for ${username}: incorrect password.`);
     throw new Error("Invalid credentials.");
   }
 

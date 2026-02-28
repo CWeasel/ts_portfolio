@@ -7,12 +7,22 @@ import { CompanyAdmin } from "./CompaniesSection";
 import { ProjectsAdmin } from "./ProjectsSection";
 import { ProfileAdmin } from "./ProfileSection";
 import { RolesAdmin } from "./RoleSection";
+import { LoginPage } from "../LoginSection";
+import { useAuth } from "../../hooks/useAdmin";
 
 interface Props {
   page: Page;
 }
 
 export function AdminPage({ page }: Props) {
+  const isAuthenticated = useAuth();
+  if (isAuthenticated === null) {
+    return <div>Verifying authentication...</div>;
+  }
+  if (!isAuthenticated) {
+    return <LoginPage />;
+  }
+
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
       <aside
