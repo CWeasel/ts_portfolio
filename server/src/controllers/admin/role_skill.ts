@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
-import { getSkills } from "./skills";
-import { getRoles } from "./roles";
+import { getSkills } from "./skills.ts";
+import { getRoles } from "./roles.ts";
 
 const getSkillsForRole = async (app: FastifyInstance, role_id: string) => {
   // Check if role exists

@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { updateSkillForProject } from "./project_skill";
+import { updateSkillForProject } from "./project_skill.ts";
 
 export const getProjects = async (
   app: FastifyInstance,

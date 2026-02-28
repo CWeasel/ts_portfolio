@@ -4,7 +4,7 @@ import {
   createProject,
   updateProject,
   deleteProject,
-} from "../../controllers/admin/projects";
+} from "../../controllers/admin/projects.ts";
 
 export async function projectRoutes(app: FastifyInstance) {
   // GET all projects

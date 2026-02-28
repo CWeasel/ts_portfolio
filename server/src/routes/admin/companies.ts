@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { getCompanies, createCompany, updateCompany, deleteCompany } from "../../controllers/admin/companies.js";
+import { getCompanies, createCompany, updateCompany, deleteCompany } from "../../controllers/admin/companies.ts";
 
 export async function companyRoutes(app: FastifyInstance) {
   // GET all companies

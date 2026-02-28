@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { getRoles, createRole, updateRole, deleteRole } from "../../controllers/admin/roles";
+import { getRoles, createRole, updateRole, deleteRole } from "../../controllers/admin/roles.ts";
 
 const endpoint:string = "/roles";
 
