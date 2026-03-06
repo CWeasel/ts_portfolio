@@ -2,7 +2,7 @@ import "dotenv/config";
 import Fastify, { fastify } from "fastify";
 import fastifyPostgres from "@fastify/postgres";
 import cors from "@fastify/cors";
-import portfolioGroupedRoutes from "./routes/portfolio.router.ts";
+import portfolioGroupedRoutes from "./routes/portfolio.routes.ts";
 import healthRoutes from "./routes/health.ts";
 import { createDB } from "./db/postgresql.ts";
 import adminRoutes, { requireAdmin } from "./routes/admin/admin.routes.ts";

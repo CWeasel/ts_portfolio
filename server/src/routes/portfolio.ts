@@ -1,4 +1,7 @@
 import type { FastifyInstance } from "fastify";
+import { getSkills } from "../controllers/admin/skills.ts";
+import {getRoles} from "../controllers/admin/roles.ts";
+import { getFeaturedProjects } from "../controllers/projects.ts";
 
 async function portfolioRoutes(app: FastifyInstance) {
   (app.get("/portfolio", async () => {
@@ -114,6 +117,18 @@ async function portfolioRoutes(app: FastifyInstance) {
         blocks: resolvedBlocks,
       };
     }));
+  app.get("/skills", async () => {
+    const skills = await getSkills(app);
+    return skills;
+  });
+  app.get("/roles", async () => {
+    const roles = await getRoles(app);
+    return roles;
+  });
+  app.get("/projects", async () => {
+    const projects = await getFeaturedProjects(app);
+    return projects;
+  });
 }
 
 export default portfolioRoutes;
