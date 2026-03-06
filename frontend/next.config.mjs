@@ -7,6 +7,7 @@ const nextConfig = {
     unoptimized: true,
   },
   allowedDevOrigins: ["localhost", "127.0.0.1"],
+  port: 3001,
 }
 
 export default nextConfig

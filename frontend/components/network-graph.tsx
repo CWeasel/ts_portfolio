@@ -14,6 +14,8 @@ export function NetworkGraph() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const animationRef = useRef<number>(0)
   const nodesRef = useRef<Node[]>([])
+  const lastFrameTimeRef = useRef<number>(0)
+  const isVisibleRef = useRef<boolean>(true)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -23,7 +25,7 @@ export function NetworkGraph() {
     if (!ctx) return
 
     const resize = () => {
-      const dpr = window.devicePixelRatio || 1
+      const dpr = Math.min(window.devicePixelRatio || 1, 2) // Cap DPR at 2 for performance
       const rect = canvas.getBoundingClientRect()
       canvas.width = rect.width * dpr
       canvas.height = rect.height * dpr
@@ -33,7 +35,7 @@ export function NetworkGraph() {
     resize()
     window.addEventListener("resize", resize)
 
-    const nodeCount = 40
+    const nodeCount = 20 // Reduced from 40 for better performance
     const connectionDistance = 150
 
     if (nodesRef.current.length === 0) {
@@ -49,7 +51,30 @@ export function NetworkGraph() {
       }
     }
 
-    const animate = () => {
+    // IntersectionObserver to pause animation when not visible
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting
+        if (!entry.isIntersecting) {
+          cancelAnimationFrame(animationRef.current)
+        } else {
+          animate()
+        }
+      },
+      { threshold: 0.1 }
+    )
+    observer.observe(canvas)
+
+    const animate = (timestamp: number = 0) => {
+      if (!isVisibleRef.current) return
+
+      // Throttle to ~30 FPS (every ~33ms)
+      if (timestamp - lastFrameTimeRef.current < 33) {
+        animationRef.current = requestAnimationFrame(animate)
+        return
+      }
+      lastFrameTimeRef.current = timestamp
+
       const rect = canvas.getBoundingClientRect()
       ctx.clearRect(0, 0, rect.width, rect.height)
 
@@ -95,6 +120,7 @@ export function NetworkGraph() {
 
     return () => {
       window.removeEventListener("resize", resize)
+      observer.disconnect()
       cancelAnimationFrame(animationRef.current)
     }
   }, [])
