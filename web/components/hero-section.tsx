@@ -1,13 +1,13 @@
 "use client"
 
-// import { ArrowDown, Download } from "lucide-react"
-// import { NetworkGraph } from "./network-graph"
-// import { FadeIn } from "./fade-in"
+import { ArrowDown, Download } from "lucide-react"
+import { NetworkGraph } from "./network-graph"
+import { FadeIn } from "./fade-in"
 
 export function HeroSection() {
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden">
-      {/* <div className="absolute inset-0">
+      <div className="absolute inset-0">
         <NetworkGraph />
       </div>
 
@@ -71,7 +71,7 @@ export function HeroSection() {
             <ArrowDown className="h-4 w-4 animate-bounce" />
           </a>
         </FadeIn>
-      </div> */}
+      </div>
     </section>
   )
 }

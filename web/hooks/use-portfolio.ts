@@ -26,6 +26,6 @@ export async function getProjects<T>() {
 }
 
 export async function getExperiences<T>() {
-    const data = await fetchData<T[]>("/experience");
+    const data = await fetchData<T[]>("/roles");
     return data;
 }
