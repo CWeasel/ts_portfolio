@@ -15,7 +15,7 @@ type Experience = {
 export async function ExperienceSection() {
   let experiences: Experience[] = [];
   try {
-    experiences = await getExperiences<Experience>();
+    experiences = await getExperiences();
   } catch (error) {
     log("Error fetching projects:", error);
   }

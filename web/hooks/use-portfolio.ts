@@ -1,7 +1,7 @@
 import { fetchData } from "./use-shared";
 
-export async function getSkills() {
-  return fetchData("/skills");
+export async function getSkills<T>() {
+  return fetchData<T>("/skills");
 }
 
 export async function getProjects<T>() {
@@ -10,7 +10,7 @@ export async function getProjects<T>() {
 }
 
 export async function getExperiences<T>() {
-    const data = await fetchData<T[]>("/roles");
+    const data = await fetchData<T>("/roles");
     return data;
 }
 

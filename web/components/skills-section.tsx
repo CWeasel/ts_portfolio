@@ -2,16 +2,23 @@ import { SectionHeader } from "./section-header"
 import { FadeIn } from "./fade-in"
 import { getSkills } from "@/hooks/use-portfolio"
 
+type Skill = {
+  id: string;
+  name: string;
+  category: string;
+  proficiency: number;
+}
+
 export async function SkillsSection() {
   let skillCategories = []
 
   try {
-    const skills = await getSkills()
+    const skills: Skill[] = await getSkills()
 
     // Transform backend data into skillCategories format
     skillCategories = Object.entries(
       skills.reduce(
-        (acc: Record<string, Array<{ name: string; level: number }>>, skill: { category?: string; name: string; proficiency?: number }) => {
+        (acc: Record<string, Array<{ name: string; level: number }>>, skill: Skill) => {
           const category = skill.category || "Other"
           if (!acc[category]) {
             acc[category] = []

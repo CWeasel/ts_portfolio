@@ -11,30 +11,6 @@ type Project = {
   link: string;
 };
 
-// const projects = [
-//   {
-//     name: "Infrastructure Dashboard",
-//     description:
-//       "Real-time monitoring dashboard for self-hosted infrastructure. Tracks container health, resource usage, and deployment status across multiple servers.",
-//     tags: ["TypeScript", "Next.js", "Docker API", "PostgreSQL", "WebSocket"],
-//     link: "#",
-//   },
-//   {
-//     name: "Auth Gateway Service",
-//     description:
-//       "Centralized authentication and authorization service supporting JWT tokens, role-based access control, and session management for microservice architectures.",
-//     tags: ["Python", "FastAPI", "PostgreSQL", "Redis", "Docker"],
-//     link: "#",
-//   },
-//   {
-//     name: "Deployment Pipeline",
-//     description:
-//       "Automated CI/CD pipeline with zero-downtime deployments, database migration management, SSL provisioning, and health check monitoring.",
-//     tags: ["Node.js", "Docker Compose", "Nginx", "Certbot", "GitHub Actions"],
-//     link: "#",
-//   },
-// ]
-
 export async function ProjectsSection() {
   let projects: Project[] = [];
   try {
