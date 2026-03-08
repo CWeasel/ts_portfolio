@@ -29,3 +29,8 @@ export async function getExperiences<T>() {
     const data = await fetchData<T[]>("/roles");
     return data;
 }
+
+export async function getProfile<T>() {
+    const data = await fetchData<T>("/profile");
+    return data;
+}

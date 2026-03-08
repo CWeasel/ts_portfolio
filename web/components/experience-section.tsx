@@ -1,31 +1,25 @@
 import { SectionHeader } from "./section-header"
 import { FadeIn } from "./fade-in"
+import { getExperiences } from "@/hooks/use-portfolio"
+import { log } from "console";
 
-const experiences = [
-  {
-    company: "Acme Corp",
-    role: "Fullstack Developer",
-    period: "2023 - Present",
-    impact:
-      "Designed and deployed internal tools that consolidated three legacy systems into a single platform, improving developer velocity.",
-  },
-  {
-    company: "Buildware Inc",
-    role: "Backend Developer",
-    period: "2021 - 2023",
-    impact:
-      "Architected a microservice-based API layer serving 50k+ daily requests with 99.9% uptime using Python, FastAPI, and PostgreSQL.",
-  },
-  {
-    company: "Launchpad Studio",
-    role: "Junior Developer",
-    period: "2019 - 2021",
-    impact:
-      "Built and maintained client-facing web applications using React and Django, contributing to 12 successful product launches.",
-  },
-]
+type Experience = {
+  id:string;
+  title: string;
+  company: string;
+  start_date: string;
+  end_date: string;
+  description: string;
+}
 
-export function ExperienceSection() {
+export async function ExperienceSection() {
+  let experiences: Experience[] = [];
+  try {
+    experiences = await getExperiences<Experience>();
+  } catch (error) {
+    log("Error fetching projects:", error);
+  }
+  
   return (
     <section id="experience" className="border-t border-border py-24 md:py-32">
       <div className="mx-auto max-w-5xl px-6 md:px-8">
@@ -52,7 +46,7 @@ export function ExperienceSection() {
 
                   <div className="shrink-0 pb-2 md:w-40 md:pl-8 md:pb-0">
                     <p className="font-mono text-xs text-muted-foreground">
-                      {exp.period}
+                      {exp.start_date} - {exp.end_date ?? "Present"}
                     </p>
                   </div>
 
@@ -62,11 +56,11 @@ export function ExperienceSection() {
                         {exp.company}
                       </h3>
                       <span className="text-sm text-muted-foreground">
-                        {exp.role}
+                        {exp.title}
                       </span>
                     </div>
                     <p className="text-sm leading-relaxed text-muted-foreground">
-                      {exp.impact}
+                      {exp.description}
                     </p>
                   </div>
                 </div>

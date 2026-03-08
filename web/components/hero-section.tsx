@@ -1,10 +1,29 @@
-"use client"
+//"use client"
 
 import { ArrowDown, Download } from "lucide-react"
 import { NetworkGraph } from "./network-graph"
 import { FadeIn } from "./fade-in"
+import { getProfile } from "@/hooks/use-portfolio"
 
-export function HeroSection() {
+type Profile = {
+  full_name: string;
+  headline: string;
+  summary: string;
+  photo_url: string;
+  email: string;
+  github_url: string;
+  linkedin_url: string;
+  location: string;
+}
+
+export async function HeroSection() {
+  let profile: Profile | null = null;
+  try {
+    profile = await getProfile<Profile>();
+    console.log("Fetched profile:", profile);
+  } catch (error) {
+    console.log("Error fetching profile:", error);
+  }
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden">
       <div className="absolute inset-0">
@@ -16,27 +35,25 @@ export function HeroSection() {
       <div className="relative mx-auto w-full max-w-5xl px-6 py-32 md:px-8">
         <FadeIn>
           <p className="mb-4 font-mono text-xs uppercase tracking-widest text-primary">
-            Software Engineer
+            {profile?.headline || "Backend / Fullstack Developer with an Architect's Mindset"}
           </p>
         </FadeIn>
 
         <FadeIn delay={100}>
           <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
-            Your Name
+            {profile?.full_name || "John Doe"}
           </h1>
         </FadeIn>
 
         <FadeIn delay={200}>
           <p className="mt-4 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground md:text-xl">
-            Backend / Fullstack Developer with an Architect&apos;s Mindset
+            {profile?.headline || "Backend / Fullstack Developer with an Architect's Mindset"}
           </p>
         </FadeIn>
 
         <FadeIn delay={300}>
           <p className="mt-4 max-w-lg text-pretty leading-relaxed text-muted-foreground">
-            I design and build systems that are structured, scalable, and
-            intentional. From database schemas to deployment pipelines, every
-            layer is considered.
+            {profile?.summary || "I build robust, scalable systems with a focus on clean architecture and efficient code. With 5+ years of experience, I thrive in dynamic environments where I can solve complex problems and contribute to impactful projects."}
           </p>
         </FadeIn>
 

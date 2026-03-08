@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify";
 
 export const getRoles = async (app: FastifyInstance) => {
     const query = `
-    SELECT id, name, company, start_date, end_date, description FROM roles r
+    SELECT r.id, r.title, c.name as company, r.start_date, r.end_date, r.description FROM roles r
     INNER JOIN companies c ON r.company_id = c.id
     ORDER BY start_date DESC;
     `;
