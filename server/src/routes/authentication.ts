@@ -7,6 +7,8 @@ export async function authenticationRoutes(app: FastifyInstance) {
     async (req, res) => {
       const { email, password } = req.body;
 
+      app.log.debug(`Request: ${email} && ${"*".repeat(password.length)}`);
+
       if (!email || !password) {
         return res
           .status(400)
