@@ -29,7 +29,7 @@ export async function authenticationRoutes(app: FastifyInstance) {
   );
 
   app.post("/logout", async (req, res) => {
-    req.destroySession();
+    req.session.destroy();
     return { ok: true };
   });
 

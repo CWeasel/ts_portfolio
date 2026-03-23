@@ -22,6 +22,11 @@ export default function FormComponent<T extends { id: string }>({
 
     console.log("Form data entries:", Array.from(formData.entries()));
 
+    // Preserve the id if editing an existing item
+    if (data?.id) {
+      submitData['id' as keyof T] = data.id as T[keyof T];
+    }
+
     schema.fields.forEach((field) => {
       const value = formData.get(field.key);
       if (value !== null) {
@@ -45,7 +50,8 @@ export default function FormComponent<T extends { id: string }>({
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id={field.key}
             name={field.key}
-            type="text"
+            type={field.type === "number" ? "number" : "text"}
+            required={field.required}
             defaultValue={data?.[field.key as keyof T]?.toString() || ""}
           />
         </div>

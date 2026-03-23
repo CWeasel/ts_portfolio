@@ -78,7 +78,7 @@ export async function skillRoutes(app: FastifyInstance) {
         return res.status(404).send({ error: "Skill not found" });
       }
 
-      if (proficiency !== undefined && (proficiency < 1 || proficiency > 5)) {
+      if (proficiency !== undefined && (proficiency < 1 || proficiency > 100)) {
         return res.status(400).send({ error: "Proficiency must be between 1 and 5" });
       }
 

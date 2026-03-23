@@ -4,6 +4,7 @@ import type { ModelSchema } from "@/types/admin-types";
 import TableComponent from "./table-component";
 import { useResource } from "@/hooks/use-admin";
 import FormComponent from "./form-component";
+import { useState } from "react";
 
 type Skill = {
   id: string;
@@ -36,16 +37,22 @@ export function AdminSkillsSection() {
     update,
     remove,
   } = useResource<Skill>(SkillSchema.endpoint);
+  const [editing, setEditing] = useState<Skill | null>(null);
+  const [deleting, setDeleting] = useState<Skill | null>(null);
+
   if (loading) return <p>Loading skills…</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   const handleSubmit = async (data: Partial<Skill>) => {
+    console.log("Submitting skill data:", data);
     if (data.id) {
       await update(data.id, data);
     } else {
       await create(data);
     }
+    setEditing(null);
   };
+  const handleCancel = () => setEditing(null);
 
   return (
     <section
@@ -54,11 +61,17 @@ export function AdminSkillsSection() {
     >
       <div className="mx-auto max-w-5xl px-6 md:px-8">
         <h1 className="text-2xl font-bold mb-6">Admin Skills Management</h1>
-        <TableComponent schema={SkillSchema} data={skills} />
+        <TableComponent
+          schema={SkillSchema}
+          data={skills}
+          setEditing={setEditing}
+          setDeleting={setDeleting}
+        />
         <FormComponent
           schema={SkillSchema}
-          data={{ id: "", name: "", category: "", proficiency: 0 }}
+          data={editing}
           onSubmit={handleSubmit}
+          onCancel={handleCancel}
         />
       </div>
     </section>
