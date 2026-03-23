@@ -13,8 +13,8 @@ export function LoginSection() {
         try {
             await loginAdmin(email, password);
             window.location.href = "/admin";
-        } catch (error: any) {
-            alert(error.message || "Login failed. Please try again.");
+        } catch (error: unknown) {
+            alert(error as string || "Login failed. Please try again.");
         }
     };    
 

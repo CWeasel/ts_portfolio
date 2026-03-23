@@ -5,6 +5,7 @@ import TableComponent from "./table-component";
 import { useResource } from "@/hooks/use-admin";
 import FormComponent from "./form-component";
 import { useState } from "react";
+import ConfirmDelete from "./confirm-delete-component";
 
 type Skill = {
   id: string;
@@ -61,6 +62,18 @@ export function AdminSkillsSection() {
     >
       <div className="mx-auto max-w-5xl px-6 md:px-8">
         <h1 className="text-2xl font-bold mb-6">Admin Skills Management</h1>
+        <div className="mb-4">
+          {deleting && (
+          <ConfirmDelete
+            item={deleting}
+            onConfirm={async () => {
+              await remove(deleting.id);
+              setDeleting(null);
+            }}
+            onCancel={() => setDeleting(null)}
+          />
+        )}
+        </div>
         <TableComponent
           schema={SkillSchema}
           data={skills}
@@ -73,6 +86,7 @@ export function AdminSkillsSection() {
           onSubmit={handleSubmit}
           onCancel={handleCancel}
         />
+
       </div>
     </section>
   );
