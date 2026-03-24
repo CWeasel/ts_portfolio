@@ -2,6 +2,11 @@
 import { loginAdmin } from "@/hooks/use-admin";
 import { FadeIn } from "../fade-in";
 
+type AuthCredential = {
+  email: string;
+  password: string;
+};
+
 export function LoginSection() {
     async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -9,9 +14,10 @@ export function LoginSection() {
         const formData = new FormData(event.currentTarget);
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
+        const credentials: AuthCredential = { email, password };
 
         try {
-            await loginAdmin(email, password);
+            await loginAdmin(credentials);
             window.location.href = "/admin";
         } catch (error: unknown) {
             alert(error as string || "Login failed. Please try again.");

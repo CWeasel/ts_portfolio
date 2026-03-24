@@ -1,9 +1,9 @@
 import { fetchData } from "./use-shared";
 import { useEffect, useState } from "react";
 
-export async function loginAdmin(email: string, password: string) {
+export async function loginAdmin<T>(creds: T) {
 
-  return fetchData("/auth/login", "POST", { "email": email, "password": password });
+  return fetchData<T>("/auth/login", "POST", creds);
 }
 
 export function useAuth() {

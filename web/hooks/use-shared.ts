@@ -1,15 +1,21 @@
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
 const apiPath = process.env.NEXT_PUBLIC_API_PATH || "/api";
 
-export async function fetchData<T>(path: string, method: string = "GET", data?: Partial<T>): Promise<T> {
-  const fullUrl = path.startsWith("http") ? path : `${baseUrl}${apiPath}${path}`;
+export async function fetchData<T>(
+  path: string,
+  method: string = "GET",
+  data?: Partial<T>,
+): Promise<T> {
+  const fullUrl = path.startsWith("http")
+    ? path
+    : `${baseUrl}${apiPath}${path}`;
 
-  const res = await fetch(fullUrl, { 
+  const res = await fetch(fullUrl, {
     method: method,
     credentials: "include",
     ...(data && { headers: { "Content-Type": "application/json" } }),
     next: { revalidate: 3600 },
-    ...(data && { body: JSON.stringify(data) })
+    ...(data && { body: JSON.stringify(data) }),
   });
 
   if (!res.ok) {
