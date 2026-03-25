@@ -1,6 +1,8 @@
 import { fetchData } from "./use-shared";
 import { useEffect, useState } from "react";
 
+const inFlightRequests = new Map<string, Promise<unknown>>();
+
 export async function loginAdmin<T>(creds: T) {
 
   return fetchData<T>("/auth/login", "POST", creds);
@@ -28,7 +30,7 @@ export function useResource<T extends { id: string }>(endpoint: string) {
   async function load() {
     try {
       setLoading(true);
-      const data: T[] = await fetchData(endpoint, "GET");
+      const data: T[] = await dedupFetch(endpoint, () => fetchData(endpoint, "GET"));
       setItems(data);
     } catch (error) {
       console.error("Error fetching resource:", error);
@@ -77,3 +79,20 @@ export function useResource<T extends { id: string }>(endpoint: string) {
 
   return { items, loading, error, reload: load, create, update, remove } as const;
 }
+
+// For dev strict mode to avoid double calls
+async function dedupFetch<T>(endpoint: string, fn: () => Promise<T>) {
+  if (inFlightRequests.has(endpoint)) {
+    return inFlightRequests.get(endpoint) as Promise<T>;
+  }
+
+  const promise = fn();
+  inFlightRequests.set(endpoint, promise);
+
+  try {
+    return await promise;
+  } finally {
+    inFlightRequests.delete(endpoint);
+  }
+}
+

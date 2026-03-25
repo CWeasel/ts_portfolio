@@ -8,6 +8,7 @@ export interface FieldConfig {
     multiple?: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface ModelSchema<T>{
     name: string;
     endpoint: string;

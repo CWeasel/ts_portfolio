@@ -4,12 +4,12 @@ export default function TableComponent<T extends { id: string }>({
   schema,
   data,
   setEditing,
-  setDeleting
+  setDeleting,
 }: {
   schema: ModelSchema<T>;
   data: T[];
   setEditing: (item: T) => void;
-  setDeleting: (item: T) => void;
+  setDeleting?: (item: T) => void;
 }) {
   return (
     <table className="w-full table-auto mb-6">
@@ -38,12 +38,14 @@ export default function TableComponent<T extends { id: string }>({
               >
                 Edit
               </button>
-              <button
-                className="text-red-500 hover:underline"
-                onClick={() => setDeleting(item)}
-              >
-                Delete
-              </button>
+              {setDeleting && (
+                <button
+                  className="text-red-500 hover:underline"
+                  onClick={() => setDeleting(item)}
+                >
+                  Delete
+                </button>
+              )}
             </td>
           </tr>
         ))}
