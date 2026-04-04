@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
-import { getCompanies } from "../../controllers/admin/companies";
-import { updateSkillForRole } from "./role_skill";
+import { getCompanies } from "../../controllers/admin/companies.js";
+import { updateSkillForRole } from "./role_skill.js";
 
 const endpoint: string = "/roles";
 
@@ -8,24 +8,26 @@ export const getRoles = async (
   app: FastifyInstance,
   id: string | null = null,
 ) => {
-  if (!id) {
-    const { rows } = await app.pg.query(`
-      SELECT id, company_id, title, start_date, end_date, description
-      FROM roles
-      ORDER BY start_date DESC
-    `);
-    return rows;
-  } else {
-    const { rows } = await app.pg.query(
-      `
-        SELECT id, company_id, title, start_date, end_date, description
-        FROM roles
-        WHERE id = $1
-        `,
-      [id],
-    );
-    return rows;
+  let query = `
+    SELECT r.id, r.title, r.start_date, r.end_date, r.description,
+      COALESCE(
+        json_agg(
+          json_build_object('id', s.id, 'name', s.name)
+        ) FILTER (WHERE s.id IS NOT NULL),
+        '[]'
+      ) AS skills,
+      json_build_object('id', c.id, 'name', c.name) AS company
+    FROM roles r
+    LEFT JOIN role_skills rs ON r.id = rs.role_id
+    LEFT JOIN skills s ON rs.skill_id = s.id
+    LEFT JOIN companies c ON r.company_id = c.id
+    GROUP BY r.id, c.id
+  `;
+  if(id){
+    query += ` WHERE r.id = $1 `;
   }
+  const { rows } = await app.pg.query(query, id ? [id] : []);
+  return rows;
 };
 
 export const createRole = async (

@@ -35,9 +35,9 @@ export async function ExperienceSection() {
           {/* Timeline line */}
           <div className="absolute left-[7px] top-2 hidden h-[calc(100%-16px)] w-px bg-border md:block" />
 
-          <div className="space-y-8 md:space-y-0">
+          <div className="space-y-8 md:space-y  -0">
             {experiences.map((exp, i) => (
-              <FadeIn key={exp.company} delay={i * 100}>
+              <FadeIn key={exp.id} delay={i * 100}>
                 <div className="group relative md:flex md:gap-10 md:py-6">
                   {/* Timeline node */}
                   <div className="absolute left-0 top-3 hidden md:block">

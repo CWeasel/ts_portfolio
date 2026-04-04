@@ -28,7 +28,19 @@ export default function TableComponent<T extends { id: string }>({
           <tr key={item.id}>
             {schema.fields.map((field) => (
               <td className="border border-border px-4 py-2" key={field.key}>
-                {item[field.key as keyof T]?.toString() || "-"}
+                {field.type === 'select' ? (
+                  field.multiple ? (
+                    Array.isArray(item[field.key as keyof T]) ? (
+                      (item[field.key as keyof T] as any[]).map((obj: any) => obj[field.optionLabelKey!]).join(', ')
+                    ) : '-'
+                  ) : (
+                    item[field.key as keyof T] && typeof item[field.key as keyof T] === 'object' ? (
+                      (item[field.key as keyof T] as any)[field.optionLabelKey!]
+                    ) : '-'
+                  )
+                ) : (
+                  item[field.key as keyof T]?.toString() || "-"
+                )}
               </td>
             ))}
             <td className="border border-border px-4 py-2">

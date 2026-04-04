@@ -21,6 +21,9 @@ export async function fetchData<T>(
   if (!res.ok) {
     throw new Error(`Failed to fetch: ${res.status}`);
   }
-
-  return res.json();
+  if (method === "GET" || method === "POST") {
+    return res.json();
+  }else{
+    return data as T;
+  }
 }

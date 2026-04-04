@@ -11,7 +11,7 @@ export async function profileRoutes(app: FastifyInstance) {
     if (rows.length === 0) {
       return res.status(404).send({ error: "Profile not found" });
     }
-    return rows[0];
+    return rows;
   });
 
   // PUT update profile (singleton - always updates the one profile)

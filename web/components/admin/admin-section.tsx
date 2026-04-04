@@ -21,7 +21,6 @@ export default function AdminSection<T extends { id: string; name: string }>({
   const [deleting, setDeleting] = useState<T | null>(null);
 
   if (loading) return <p>{`Loading ${schema.name}...`}</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   // Add handlers
   const handleSubmit = async (data: Partial<T>) => {
@@ -55,6 +54,9 @@ export default function AdminSection<T extends { id: string; name: string }>({
               }}
               onCancel={() => setDeleting(null)}
             />
+          )}
+          {error &&(
+            <p style={{ color: "red" }}>{error}</p>
           )}
         </div>
         <TableComponent

@@ -18,7 +18,7 @@ const ProjectSchema: ModelSchema<Project> = {
   name: "project",
   endpoint: "/admin/projects",
   fields: [
-  { key: "skill_ids", label: "Skills", type: "select", required: false, optionsEndpoint: "/admin/skills", optionLabelKey: "name", multiple: true },
+  { key: "skills", label: "Skills", type: "select", required: false, optionsEndpoint: "/admin/skills", optionLabelKey: "name", multiple: true },
     {key:"name", label:"Project Name", type:"text", required: true },
     {key:"summary", label:"Project Summary", type:"text", required: true },
     {key:"description", label:"Project Description", type:"text", required: false },

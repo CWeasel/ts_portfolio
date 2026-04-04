@@ -17,7 +17,7 @@ export const buildApp = () => {
 
   // Register Cors plugin
   app.register(cors, {
-    origin: "http://localhost:3001",
+    origin: ["http://localhost:5173","http://localhost:3001"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
   });

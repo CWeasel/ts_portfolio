@@ -15,8 +15,8 @@ const RoleSchema: ModelSchema<Role> = {
   name: "role",
   endpoint: "/admin/roles",
   fields: [
-    { key: "company_id", label: "Company ID", type: "select", required: true, optionsEndpoint: "/admin/companies", optionLabelKey: "name" },
-    { key: "skill_ids", label: "Skills", type: "select", required: false, optionsEndpoint: "/admin/skills", optionLabelKey: "name", multiple: true },
+    { key: "company", label: "Company ID", type: "select", required: true, optionsEndpoint: "/admin/companies", optionLabelKey: "name" },
+    { key: "skills", label: "Skills", type: "select", required: false, optionsEndpoint: "/admin/skills", optionLabelKey: "name", multiple: true },
     { key: "title", label: "Role Title", type: "text", required: true },
     { key: "start_date", label: "Start Date", type: "date", required: true },
     { key: "end_date", label: "End Date", type: "date", required: false },
