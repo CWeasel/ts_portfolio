@@ -25,13 +25,6 @@ export function MultiSelectField<T extends {id:string, name:string}>({
 
       try {
         const data = await fetchData(field.optionsEndpoint);
-        // const response = await fetch(`http://localhost:3000/api${field.optionsEndpoint}`, {credentials: "include"});
-        // if (!response.ok) {
-        //   throw new Error(`Failed to fetch options from ${field.optionsEndpoint}`);
-        // }
-
-        // const data = await response.json();
-
         if (Array.isArray(data)) {
           setOptions(data);
           return;
@@ -99,7 +92,7 @@ export function MultiSelectField<T extends {id:string, name:string}>({
   return (
     <div className="mb-4">
       <label
-        className="block text-gray-700 text-sm font-bold mb-2"
+        className="block text-sm font-bold mb-2"
         htmlFor={field.key}
       >
         {field.label}
@@ -112,7 +105,7 @@ export function MultiSelectField<T extends {id:string, name:string}>({
           setSelectedValue(e.target.value);
           handleAddItem(e.target.value);
         }}
-        className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        className="shadow border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"
       >
         <option value="">Select an item...</option>
         {availableOptions.map((option) => (

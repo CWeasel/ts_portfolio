@@ -2,6 +2,7 @@ import { SectionHeader } from "./section-header"
 import { FadeIn } from "./fade-in"
 import { getExperiences } from "@/hooks/use-portfolio"
 import { log } from "console";
+import { NormalizeDate } from "@/hooks/use-shared";
 
 type Experience = {
   id:string;
@@ -16,6 +17,14 @@ export async function ExperienceSection() {
   let experiences: Experience[] = [];
   try {
     experiences = await getExperiences();
+    experiences.map(exp => {
+      if (exp.start_date) {
+        exp.start_date = NormalizeDate(exp.start_date);
+      }
+      if (exp.end_date) {
+        exp.end_date = NormalizeDate(exp.end_date);
+      }
+    })
   } catch (error) {
     log("Error fetching projects:", error);
   }

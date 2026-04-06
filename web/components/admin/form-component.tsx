@@ -1,5 +1,7 @@
 import type { ModelSchema } from "@/types/admin-types";
 import { MultiSelectField } from "./multi-select-component";
+import { SelectField } from "./select-component";
+import { NormalizeData } from "@/hooks/use-shared";
 
 interface Props<T> {
   schema: ModelSchema<T>;
@@ -14,6 +16,7 @@ export default function FormComponent<T extends { id: string }>({
   onSubmit,
   onCancel,
 }: Props<T>) {
+  data = NormalizeData<T>(data, schema) as T;
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!onSubmit) return;
@@ -48,6 +51,9 @@ export default function FormComponent<T extends { id: string }>({
         if (field.type === "select" && field.multiple) {
           return <MultiSelectField key={field.key} field={field} item={data} />;
         }
+        if (field.type === "select") {
+          return <SelectField key={field.key} field={field} item={data} />;
+        }
         return (
           <div className="mb-4" key={field.key}>
             <label
@@ -60,7 +66,7 @@ export default function FormComponent<T extends { id: string }>({
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id={field.key}
               name={field.key}
-              type={field.type === "number" ? "number" : "text"}
+              type={field.type === "date" ? "date" : field.type === "number" ? "number" : "text"}
               required={field.required}
               defaultValue={data?.[field.key as keyof T]?.toString() || ""}
             />

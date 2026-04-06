@@ -1,4 +1,5 @@
 import type { ModelSchema } from "@/types/admin-types";
+import { NormalizeDataArray } from "@/hooks/use-shared";
 
 export default function TableComponent<T extends { id: string }>({
   schema,
@@ -11,6 +12,8 @@ export default function TableComponent<T extends { id: string }>({
   setEditing: (item: T) => void;
   setDeleting?: (item: T) => void;
 }) {
+  data = NormalizeDataArray<T>(data, schema) as T[];
+
   return (
     <table className="w-full table-auto mb-6">
       <thead>
