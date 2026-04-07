@@ -1,6 +1,17 @@
+"use client";
 import { Footer } from "@/components/footer";
+import { useAuth } from "@/hooks/use-admin";
+import { redirect } from "next/navigation";
 
 export default function Page() {
+  const isAuth = useAuth();
+  if (isAuth === null) {
+    return <div>Loading...</div>;
+  }
+  if (!isAuth) {
+    redirect("/admin/login");
+  }
+
   return (
     <>
       <main>
